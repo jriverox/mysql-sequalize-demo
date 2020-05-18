@@ -1,15 +1,15 @@
-module.exports = (sequelize, Sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const addressModel = sequelize.define('Address', {
     id: {
       primaryKey: true,
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
     },
-    strett: {
-      type: Sequelize.STRING,
+    street: {
+      type: DataTypes.STRING,
       allowNull: false
     },
     city: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false
     }
   }, {

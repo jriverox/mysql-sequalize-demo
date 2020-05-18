@@ -5,13 +5,23 @@ const db = require('./models');
         await db.sequelize.authenticate();
         console.log('Connection has been established successfully.');
         await db.sequelize.sync();
-        await db.userModel.create({
-            id: 2,
-            firstName: 'Jhony',
-            lastName: 'Rivero',
-            role: 'admin',
-            email: 'jon@test'
-        });
+
+        const user = {
+          id: 2,
+          firstName: 'Jhony',
+          lastName: 'Rivero',
+          role: 'admin',
+          email: 'jon@test',
+          Address: [
+            {
+              id: 1,
+              street: 'somestreet',
+              city: 'lima'
+            }
+          ]
+        };
+
+        await db.userModel.create(user, {include: [db.addressModel]});
 
         await db.sequelize.close();
       } catch (error) {

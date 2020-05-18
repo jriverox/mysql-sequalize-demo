@@ -1,6 +1,6 @@
-const Sequelize = require('sequelize');
-const userModel = require('./user.model');
-const addressModel = require('./address.model');
+const { Sequelize, DataTypes } = require('sequelize');
+const userModelFn = require('./user.model');
+const addressModelFn = require('./address.model');
 
 const yenv = require('yenv');
 const env = yenv();
@@ -13,11 +13,16 @@ const sequelize = new Sequelize(env.MYSQL.CONNECTION, {
   }
 });
 
+const userModel = userModelFn(sequelize, DataTypes);
+const addressModel = addressModelFn(sequelize, DataTypes);
+userModel.hasMany(addressModel);
+addressModel.belongsTo(userModel);
+
 const db = {
   Sequelize: Sequelize,
   sequelize: sequelize,
-  userModel: userModel(sequelize, Sequelize),
-  addressModel: addressModel(sequelize, Sequelize)
+  userModel: userModel,
+  addressModel: addressModel
 };
 
 module.exports = db;

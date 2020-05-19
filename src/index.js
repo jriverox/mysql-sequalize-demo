@@ -9,7 +9,8 @@ const data = require('../data/data.json');
 
       for (let page = 0; page < pages; page++) {
         const offset = page * limit;
-        const users = await db.users.findAndCountAll({
+        const users = await db.users.findAll({
+          raw: true,
           order: ['id'],
           limit: limit,
           offset: offset,

@@ -7,25 +7,9 @@ module.exports = class QueueManager {
     this.queueUrl = queueUrl;
   }
 
-  send(document) {
+  async send(message) {
     const params = {
-      MessageBody: JSON.stringify(document),
-      QueueUrl: this.queueUrl,
-    }
-
-    this.sqs
-      .sendMessage(params)
-      .promise()
-      .then(result => {
-        return result.MessageId
-      })
-      .catch(err => {
-        throw err
-      })
-  }
-  async sendAsync(document) {
-    const params = {
-      MessageBody: JSON.stringify(document),
+      MessageBody: JSON.stringify(message),
       QueueUrl: this.queueUrl,
     }
 
@@ -33,25 +17,17 @@ module.exports = class QueueManager {
     return response.MessageId;
   }
 
-  sendBatch(message) {
-    return new Promise((resolve, reject) => {
-      const messages = message.map((task, i) => {
-        return {
-          Id: `task-${i}`,
-          MessageBody: JSON.stringify(task),
-        }
-      })
-      const params = {
-        Entries: messages,
-        QueueUrl: this.queueUrl,
+  async sendBatch(messageBatch) {
+    const messages = messageBatch.map((task, i) => {
+      return {
+        Id: `task-${i}`,
+        MessageBody: JSON.stringify(task),
       }
-      this.sqs.sendMessageBatch(params, (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(data)
-        }
-      })
     })
+    const params = {
+      Entries: messages,
+      QueueUrl: this.queueUrl,
+    }
+    return await this.sqs.sendMessageBatch(params).promise();
   }
 }

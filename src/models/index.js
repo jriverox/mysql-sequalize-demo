@@ -1,10 +1,11 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const userModelFn = require('./user.model');
-const addressModelFn = require('./address.model');
+const userModelInitializer = require('./user.model');
+const addressModelInitializer = require('./address.model');
 
 const yenv = require('yenv');
 const env = yenv();
 const sequelize = new Sequelize(env.MYSQL.CONNECTION, {
+  timestamps: false,
   pool: {
     max: env.MYSQL.POOL_MAX,
     min: env.MYSQL.POOL_MIN,
@@ -13,16 +14,14 @@ const sequelize = new Sequelize(env.MYSQL.CONNECTION, {
   }
 });
 
-const userModel = userModelFn(sequelize, DataTypes);
-const addressModel = addressModelFn(sequelize, DataTypes);
-userModel.hasMany(addressModel);
-addressModel.belongsTo(userModel);
-
 const db = {
   Sequelize: Sequelize,
   sequelize: sequelize,
-  userModel: userModel,
-  addressModel: addressModel
+  users: userModelInitializer(sequelize, DataTypes),
+  addresses: addressModelInitializer(sequelize, DataTypes)
 };
+
+db.users.hasMany(db.addresses, { as:  'addresses'});
+db.addresses.belongsTo(db.users, { foreignKey: 'userId', as: 'user'})
 
 module.exports = db;

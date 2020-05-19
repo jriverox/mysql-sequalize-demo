@@ -1,8 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
-  const addressModel = sequelize.define('Address', {
+  const addressModel = sequelize.define('address', {
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
+      autoIncrement: true,
     },
     street: {
       type: DataTypes.STRING,
@@ -14,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     // Other model options go here
+    timestamps: false,
   });
   return addressModel;
 };

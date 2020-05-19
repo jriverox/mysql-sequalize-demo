@@ -1,8 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
-  const userModel = sequelize.define('User', {
+  const userModel = sequelize.define('user', {
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
+      autoIncrement: true,
     },
     firstName: {
       type: DataTypes.STRING,
@@ -22,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     // Other model options go here
+    timestamps: false,
   });
   return userModel;
 };

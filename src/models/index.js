@@ -6,6 +6,7 @@ const yenv = require('yenv');
 const env = yenv();
 const sequelize = new Sequelize(env.MYSQL.CONNECTION, {
   timestamps: false,
+  logging: false,
   pool: {
     max: env.MYSQL.POOL_MAX,
     min: env.MYSQL.POOL_MIN,

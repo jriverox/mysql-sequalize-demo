@@ -10,13 +10,17 @@ const data = require('../data/data.json');
       for (let page = 0; page < pages; page++) {
         const offset = page * limit;
         const users = await db.users.findAll({
-          raw: true,
+          include: [
+            { model: db.addresses, as: 'addresses' }
+          ],
+          raw: false,
           order: ['id'],
           limit: limit,
           offset: offset,
         });
-        //console.log(`page: ${page} id: ${users[0].id}`);
-        console.log(users);
+        console.log(`-------PAGE: ${page}-------`);
+        console.log(JSON.stringify(users, null, 2))
+        console.log('---------------------------')
       }
 
       await db.sequelize.close();
